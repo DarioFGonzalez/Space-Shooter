@@ -1,46 +1,45 @@
-# Getting Started with Create React App
+# SpaceShooter 🎮🚀
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**SpaceShooter** es un mini-juego arcade tipo *bullet hell* creado 100% desde cero con React y TypeScript, sin usar ningún motor de videojuegos o librerías externas de animación. Está construido sobre una grilla, con control completo del movimiento, enemigos, colisiones, disparos, puntajes, dificultad progresiva y más.
 
-## Available Scripts
+## 🎯 ¿Qué tiene de especial?
 
-In the project directory, you can run:
+- Lógica de juego hecha a mano, desde el input hasta las explosiones.
+- Uso creativo de CSS y animaciones básicas.
+- Sin engines. Todo programado desde la lógica pura de React.
+- Inspirado en los clásicos de arcade, con un toque moderno y modular.
+- Código limpio, comentado, fácil de leer.
 
-### `npm start`
+## 🌱 ¿Cómo empezó?
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Este proyecto nació como parte de un bundle de juegos básicos, desarrollado en este repositorio:
+👉 [Repositorio original con bitácora completa](https://github.com/DarioFGonzalez/Juegos-basicos)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Ahí documenté cada paso del proceso, desde la versión alpha hasta mejoras visuales, fixes de bugs y optimización de assets. Si querés ver cómo fue tomando forma, te invito a revisar esa historia.
 
-### `npm test`
+## 🛠️ Tecnologías usadas
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- React + TypeScript
+- CSS puro
+- Git + GitHub
+- Deploy vía Vercel
 
-### `npm run build`
+## 🎮 Controles
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- `W` `A` `S` `D` para mover la nave (arriba, izquierda, abajo, derecha).
+- `SPACE` para disparar.
+- Esquivá los asteroides: si te golpean, perdés puntos y la nave vuelve al centro.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 🚀 Demo
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+👉 [¡Jugar ahora!](https://space-shooter-r5j5c18g1-dario-fernando-gonzalezs-projects.vercel.app)
 
-### `npm run eject`
+## 📂 Estructura del proyecto
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+src/ ├── assets/ # Imágenes, gifs, sprites ├── SpaceShooter.tsx # Lógica principal del juego ├── SpaceShooter.css # Estilos └── index.tsx # Render de app
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 💬 Notas personales
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Este proyecto es uno de mis favoritos personales, no por su escala, sino porque representa todo lo que me gusta de programar: resolver problemas, crear lógicas desde cero, y ver una idea tomar vida en pantalla.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
