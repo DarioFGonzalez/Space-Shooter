@@ -51,20 +51,13 @@ const SpaceShooter = () =>
         setTimeout(() => gridRef.current?.focus(), 0);
     }
 
-    const loadMap = () =>
-    {
-        let aux = Array.from( {length: 9}, ()=> Array.from( Array(9), ()=>'' ) );
-        aux[ Math.floor(mapa.length/2) ][ Math.floor(mapa[0].length/2) ] = ship_down;
-        setMapa(aux);
-    }
-
     const handleMovement = (event: React.KeyboardEvent) =>
     {
         if(!dead)
         {
             let here = [ Math.floor(mapa.length/2), Math.floor(mapa[0].length/2) ];
             let symbol = ship_down;
-            mapa.forEach( (fila, y) => fila.map( (celda, z) =>
+            mapa.forEach( (fila, y) => fila.forEach( (celda, z) =>
             {
                 if(celda===ship_down || celda===ship_up || celda===ship_left || celda===ship_right ) { here=[ y, z ]; symbol=celda; }
             } ));
@@ -251,12 +244,15 @@ const SpaceShooter = () =>
         {
             let here = [ 0, 0 ];
             let symbol = ship_up;
-            mapa.forEach( (fila, y) => fila.map( (celda, z) =>
+
+            mapa.forEach( (fila, y) => fila.forEach( (celda, z) =>
             {
                 if(celda===ship_down || celda===ship_up || celda===ship_left || celda===ship_right ) { here=[ y, z ]; symbol=celda; }
             } ));
+
             let playerLocation = [ here[0], here[1], symbol ];
             let movimiento = [ 0, 0, laser_right ];
+
             switch(player[2])
             {
                 case ship_right:
@@ -558,7 +554,7 @@ const SpaceShooter = () =>
                                                     clearInterval(shootIt);
                                                 }
                                             }
-                                            if(aShoot && objective===asteroid || (!aShoot && (objective===laser_down || objective===laser_up || objective===laser_left || objective===laser_right)) )
+                                            if(aShoot && ( objective===asteroid || ( !aShoot && (objective===laser_down || objective===laser_up || objective===laser_left || objective===laser_right) ) ) )
                                             {
                                                 aux[Number(bulletAt[0]) + ( c * Number(movimiento[0]) ) ][Number(bulletAt[1])] = "💥";
                                                 setScore( prevScore => prevScore + 10 );
@@ -620,7 +616,7 @@ const SpaceShooter = () =>
                                                         clearInterval(shootIt);
                                                     }
                                                 }
-                                                if(aShoot && objective===asteroid || (!aShoot && (objective===laser_down || objective===laser_up || objective===laser_left || objective===laser_right)) )
+                                                if(aShoot && ( objective===asteroid || (!aShoot && (objective===laser_down || objective===laser_up || objective===laser_left || objective===laser_right)) ) )
                                                 {
                                                     aux[Number(bulletAt[0])][Number(bulletAt[1]) + ( c * Number(movimiento[1]) ) ] = "💥";
                                                     setScore( prevScore => prevScore  + 10 );
@@ -756,7 +752,7 @@ const SpaceShooter = () =>
             setShowEnd(false);
         }, 3000)
 
-        aux.map( (fila, x) => fila.map( (celda, y) => {if(celda===ship_right || celda===ship_left || celda===ship_up || celda===ship_down)
+        aux.map( (fila, x) => fila.forEach( (celda, y) => {if(celda===ship_right || celda===ship_left || celda===ship_up || celda===ship_down)
         {
             aux[x][y]='';
         }} ));
@@ -772,7 +768,7 @@ const SpaceShooter = () =>
             </div>
 
             <div className='general'>
-                {startId===0 && <img src={logo} className='logo'/>}
+                {startId===0 && <img src={logo} className='logo' alt=''/>}
                 {startId!==0 &&
                 <div className='columna' ref={gridRef} onKeyDown={handleMovement} onKeyPress={shoot} tabIndex={0}>
 
@@ -795,7 +791,7 @@ const SpaceShooter = () =>
 
                             return(
                                 <>
-                                    { x && <img src={celda} key={y} className={estilo} /> }
+                                    { x && <img src={celda} key={y} className={estilo} alt="" /> }
                                     { !x && <label key={y} className='celda' >
                                                 {celda}
                                             </label>}
@@ -822,7 +818,7 @@ const SpaceShooter = () =>
 
                             return(
                                 <>
-                                    { x && <img src={celda} key={y} className='celda' /> }
+                                    { x && <img src={celda} key={y} className='celda' alt='' /> }
                                     { !x && <label key={y} className='celda' >
                                                 {celda}
                                             </label>}
@@ -831,7 +827,7 @@ const SpaceShooter = () =>
                         } )}
                     </div> )}
 
-                </div>}     
+                </div>}
             </div>
 
             {startId===0 && <button onClick={startGame}> START </button>}
