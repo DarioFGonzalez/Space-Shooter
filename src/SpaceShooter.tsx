@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import asteroid from './assets/asteroid2.png';
 import laser_down from './assets/laser_down.png';
 import laser_left from './assets/laser_left.png';
@@ -14,6 +14,7 @@ import './SpaceShooter.css';
 const SpaceShooter = () =>
 {
     const [ mapa, setMapa ] = useState( Array.from( {length: 9}, ()=> Array.from( Array(9), ()=>'' ) ) );
+    const gridRef = useRef<HTMLDivElement>(null);
     const [ startId, setStartId ] = useState( 0 );
     const [ player, setPlayer ] = useState ( [ 0, 0, ship_up ] );
     const [ click, setClick ] = useState( true );
@@ -47,6 +48,7 @@ const SpaceShooter = () =>
         }, 1000);
 
         setStartId(thisGameId as unknown as number);
+        setTimeout(() => gridRef.current?.focus(), 0);
     }
 
     const loadMap = () =>
@@ -64,7 +66,7 @@ const SpaceShooter = () =>
             let symbol = ship_down;
             mapa.forEach( (fila, y) => fila.map( (celda, z) =>
             {
-                if(celda==ship_down || celda==ship_up || celda==ship_left || celda==ship_right ) { here=[ y, z ]; symbol=celda; }
+                if(celda===ship_down || celda===ship_up || celda===ship_left || celda===ship_right ) { here=[ y, z ]; symbol=celda; }
             } ));
             setPlayer( [ here[0], here[1], symbol ] );
             let auxiliar = [ ...mapa ];
@@ -82,7 +84,7 @@ const SpaceShooter = () =>
                     }
                     else
                     {
-                        if(here[0]-1>=0 && mapa[here[0]-1][here[1]]=='')
+                        if(here[0]-1>=0 && mapa[here[0]-1][here[1]]==='')
                         {
                             let aux = mapa;
                             aux[here[0]][here[1]]='';
@@ -92,7 +94,7 @@ const SpaceShooter = () =>
                         }
                         else
                         {
-                            if(here[0]-1>=0 && mapa[here[0]-1][here[1]]==asteroid)
+                            if(here[0]-1>=0 && mapa[here[0]-1][here[1]]===asteroid)
                             {
                                 auxiliar[here[0]][here[1]] = '';
                                 auxiliar[here[0]-1][here[1]] = '💥';
@@ -124,7 +126,7 @@ const SpaceShooter = () =>
                     }
                     else
                     {
-                        if(here[1]-1>=0 && mapa[here[0]][here[1]-1]=='')
+                        if(here[1]-1>=0 && mapa[here[0]][here[1]-1]==='')
                         {
                             let aux = mapa;
                             aux[here[0]][here[1]]='';
@@ -134,7 +136,7 @@ const SpaceShooter = () =>
                         }
                         else
                         {
-                            if(here[1]-1>=0 && mapa[here[0]][here[1]-1]==asteroid)
+                            if(here[1]-1>=0 && mapa[here[0]][here[1]-1]===asteroid)
                             {
                                 auxiliar[here[0]][here[1]] = '';
                                 auxiliar[here[0]][here[1]-1] = '💥';
@@ -166,7 +168,7 @@ const SpaceShooter = () =>
                     }
                     else
                     {
-                        if(here[0]+1<mapa.length && mapa[here[0]+1][here[1]]=='')
+                        if(here[0]+1<mapa.length && mapa[here[0]+1][here[1]]==='')
                         {
                             let aux = mapa;
                             aux[here[0]][here[1]]='';
@@ -176,7 +178,7 @@ const SpaceShooter = () =>
                         }
                         else
                         {
-                            if(here[0]+1<mapa.length && mapa[here[0]+1][here[1]]==asteroid)
+                            if(here[0]+1<mapa.length && mapa[here[0]+1][here[1]]===asteroid)
                             {
                                 auxiliar[here[0]][here[1]] = '';
                                 auxiliar[here[0]+1][here[1]] = '💥';
@@ -207,7 +209,7 @@ const SpaceShooter = () =>
                     }
                     else
                     {
-                        if(here[1]+1<mapa[0].length && mapa[here[0]][here[1]+1]=='')
+                        if(here[1]+1<mapa[0].length && mapa[here[0]][here[1]+1]==='')
                         {
                             let aux = mapa;
                             aux[here[0]][here[1]]='';
@@ -217,7 +219,7 @@ const SpaceShooter = () =>
                         }
                         else
                         {
-                            if(here[1]+1<mapa[0].length && mapa[here[0]][here[1]+1]==asteroid)
+                            if(here[1]+1<mapa[0].length && mapa[here[0]][here[1]+1]===asteroid)
                             {
                                 auxiliar[here[0]][here[1]] = '';
                                 auxiliar[here[0]][here[1]+1] = '💥';
@@ -245,13 +247,13 @@ const SpaceShooter = () =>
 
     const shoot = (event: React.KeyboardEvent) =>
     {
-        if(event.key==' ' && !dead)
+        if(event.key===' ' && !dead)
         {
             let here = [ 0, 0 ];
             let symbol = ship_up;
             mapa.forEach( (fila, y) => fila.map( (celda, z) =>
             {
-                if(celda==ship_down || celda==ship_up || celda==ship_left || celda==ship_right ) { here=[ y, z ]; symbol=celda; }
+                if(celda===ship_down || celda===ship_up || celda===ship_left || celda===ship_right ) { here=[ y, z ]; symbol=celda; }
             } ));
             let playerLocation = [ here[0], here[1], symbol ];
             let movimiento = [ 0, 0, laser_right ];
@@ -275,19 +277,19 @@ const SpaceShooter = () =>
             (
                 (Number(player[1]) + Number(movimiento[1]) < mapa[0].length && Number(player[1]) + Number(movimiento[1]) >= 0) &&   //check horizontal
                 (Number(player[0]) + Number(movimiento[0]) < mapa.length && Number(player[0]) + Number(movimiento[0]) >= 0) &&      //check vertical
-                (mapa[Number(player[0]) + Number(movimiento[0])][Number(player[1]) + Number(movimiento[1])]!='-' ||                 //check for a wall
-                mapa[Number(player[0]) + Number(movimiento[0])][Number(player[1]) + Number(movimiento[1])]==asteroid )                  //check for an enemy
+                (mapa[Number(player[0]) + Number(movimiento[0])][Number(player[1]) + Number(movimiento[1])]!=='-' ||                 //check for a wall
+                mapa[Number(player[0]) + Number(movimiento[0])][Number(player[1]) + Number(movimiento[1])]===asteroid )                  //check for an enemy
             )
             {
                 let bulletAt = [ Number(player[0]) + Number(movimiento[0]), Number(player[1]) + Number(movimiento[1]) ];
                 let c = 0;
                 let shootIt = setInterval( () =>
                 {
-                    if(c==0)
+                    if(c===0)
                     {
                         let aux = [...mapa];
                         console.log(aux[bulletAt[0]][bulletAt[1]]);
-                        if(aux[bulletAt[0]][bulletAt[1]]=="🌑")
+                        if(aux[bulletAt[0]][bulletAt[1]]==="🌑")
                         {
                             aux[bulletAt[0]][bulletAt[1]] = '💥';
                             setMapa(aux);
@@ -313,15 +315,15 @@ const SpaceShooter = () =>
                         (
                             (Number(bulletAt[0]) + ( c * Number(movimiento[0]) ) < mapa.length && Number(bulletAt[0]) + ( c * Number(movimiento[0]) ) >= 0) &&
                             (Number(bulletAt[1]) + ( c * Number(movimiento[1]) ) < mapa[0].length && Number(bulletAt[1]) + ( c * Number(movimiento[1]) ) >= 0) &&
-                            (mapa[Number(bulletAt[0]) + (c * Number(movimiento[0]) )][Number(bulletAt[1]) + (c * Number(movimiento[1]) )]=='' ||
-                            mapa[Number(bulletAt[0]) + (c * Number(movimiento[0]) )][Number(bulletAt[1]) + (c * Number(movimiento[1]) )]==asteroid)
+                            (mapa[Number(bulletAt[0]) + (c * Number(movimiento[0]) )][Number(bulletAt[1]) + (c * Number(movimiento[1]) )]==='' ||
+                            mapa[Number(bulletAt[0]) + (c * Number(movimiento[0]) )][Number(bulletAt[1]) + (c * Number(movimiento[1]) )]===asteroid)
                         )
                         {
                             let aux = mapa;
                             let objective = mapa[Number(bulletAt[0]) + (c * Number(movimiento[0]) )][Number(bulletAt[1]) + (c * Number(movimiento[1]) )];
-                            if(objective=='')
+                            if(objective==='')
                             {
-                                if(movimiento[0]!=0)
+                                if(movimiento[0]!==0)
                                 {
                                     aux[Number(bulletAt[0]) + ( ( c - 1 ) * Number(movimiento[0]) ) ][Number(bulletAt[1])]='';
                                     aux[Number(bulletAt[0]) + ( c * Number(movimiento[0]) ) ][Number(bulletAt[1])] = String(movimiento[2]);
@@ -330,7 +332,7 @@ const SpaceShooter = () =>
                                 }
                                 else
                                 {
-                                    if(movimiento[1]!=0)
+                                    if(movimiento[1]!==0)
                                     {
                                         aux[Number(bulletAt[0])][Number(bulletAt[1]) + ( ( c - 1 ) * Number(movimiento[1]) )]='';
                                         aux[Number(bulletAt[0])][Number(bulletAt[1]) + ( c * Number(movimiento[1]) ) ]= String(movimiento[2]);
@@ -341,9 +343,9 @@ const SpaceShooter = () =>
                             }
                             else
                             {
-                                if(objective==asteroid)
+                                if(objective===asteroid)
                                 {
-                                    if(movimiento[0]!=0)
+                                    if(movimiento[0]!==0)
                                     {
                                         aux[Number(bulletAt[0]) + ( ( c - 1 ) * Number(movimiento[0]) ) ][Number(bulletAt[1])]='';
                                         aux[Number(bulletAt[0]) + ( c * Number(movimiento[0]) ) ][Number(bulletAt[1])] = "💥";
@@ -354,7 +356,7 @@ const SpaceShooter = () =>
                                     }
                                     else
                                     {
-                                        if(movimiento[1]!=0)
+                                        if(movimiento[1]!==0)
                                         {
                                             aux[Number(bulletAt[0])][Number(bulletAt[1]) + ( ( c - 1 ) * Number(movimiento[1]) )]='';
                                             aux[Number(bulletAt[0])][Number(bulletAt[1]) + ( c * Number(movimiento[1]) ) ]= "💥";
@@ -370,7 +372,7 @@ const SpaceShooter = () =>
                         else
                         {
                             let aux = mapa;
-                            if(movimiento[0]!=0)
+                            if(movimiento[0]!==0)
                             {
                                 aux[Number(bulletAt[0]) + ( (c - 1) * Number(movimiento[0]) ) ][Number(bulletAt[1])]='';
                                 c++;
@@ -379,7 +381,7 @@ const SpaceShooter = () =>
                             }
                             else
                             {
-                                if(movimiento[1]!=0)
+                                if(movimiento[1]!==0)
                                 {
                                     aux[Number(bulletAt[0])][Number(bulletAt[1]) + ( (c - 1) * Number(movimiento[1]) )]='';
                                     c++;
@@ -389,8 +391,8 @@ const SpaceShooter = () =>
                             }
                         }
                     }
-                    c%2==0 && setClick(false);
-                    c%2!=0 && setClick(true);
+                    c%2===0 && setClick(false);
+                    c%2!==0 && setClick(true);
                     console.log("teoricamente esta ", click)
                 }, 50)
             }
@@ -410,12 +412,12 @@ const SpaceShooter = () =>
                 let c = 0;
                 let shootIt = setInterval( () =>
                 {
-                    if(c==0)
+                    if(c===0)
                     {
                         let target = aux[bulletAt[0]][bulletAt[1]];
-                        if( target==asteroid || target==ship_right || target==ship_left || target==ship_up || target==ship_down )
+                        if( target===asteroid || target===ship_right || target===ship_left || target===ship_up || target===ship_down )
                         {
-                            if(!aShoot && (target==ship_right || target==ship_left || target==ship_up || target==ship_down) && !dead)
+                            if(!aShoot && (target===ship_right || target===ship_left || target===ship_up || target===ship_down) && !dead)
                             {
                                 aux[bulletAt[0]][bulletAt[1]] = '💥';
                                 aux[ Math.floor(mapa.length/2) ][ Math.floor(mapa[0].length/2) ] = ship_down;
@@ -424,13 +426,13 @@ const SpaceShooter = () =>
                             }
                             else
                             {
-                                if(!aShoot && (target==ship_right || target==ship_left || target==ship_up || target==ship_down) && dead)
+                                if(!aShoot && (target===ship_right || target===ship_left || target===ship_up || target===ship_down) && dead)
                                 {
                                     aux[startingPoint[0]][startingPoint[1]]='';
                                 }
                                 else
                                 {
-                                    if(aShoot && target==asteroid)
+                                    if(aShoot && target===asteroid)
                                     {
                                         aux[bulletAt[0]][bulletAt[1]] = '💥';
                                         setScore( Number(score) + 10 );
@@ -460,16 +462,16 @@ const SpaceShooter = () =>
                         (
                             (Number(bulletAt[0]) + ( c * Number(movimiento[0]) ) < mapa.length && Number(bulletAt[0]) + ( c * Number(movimiento[0]) ) >= 0) &&
                             (Number(bulletAt[1]) + ( c * Number(movimiento[1]) ) < mapa[0].length && Number(bulletAt[1]) + ( c * Number(movimiento[1]) ) >= 0) &&
-                            mapa[Number(bulletAt[0]) + (c * Number(movimiento[0]) )][Number(bulletAt[1]) + (c * Number(movimiento[1]) )]!='-'
+                            mapa[Number(bulletAt[0]) + (c * Number(movimiento[0]) )][Number(bulletAt[1]) + (c * Number(movimiento[1]) )]!=='-'
                         )
                         {
                             let objective = mapa[Number(bulletAt[0]) + (c * Number(movimiento[0]) )][Number(bulletAt[1]) + (c * Number(movimiento[1]) )];
-                            if(objective=='')
+                            if(objective==='')
                             {
-                                if(movimiento[0]!=0)
+                                if(movimiento[0]!==0)
                                 {
-                                    if( aux[Number(bulletAt[0]) + ( ( c - 1 ) * Number(movimiento[0]) ) ][Number(bulletAt[1])]=='' ||
-                                        aux[Number(bulletAt[0]) + ( ( c - 1 ) * Number(movimiento[0]) ) ][Number(bulletAt[1])]=='💥' )
+                                    if( aux[Number(bulletAt[0]) + ( ( c - 1 ) * Number(movimiento[0]) ) ][Number(bulletAt[1])]==='' ||
+                                        aux[Number(bulletAt[0]) + ( ( c - 1 ) * Number(movimiento[0]) ) ][Number(bulletAt[1])]==='💥' )
                                     {
                                         c++;
                                         clearInterval(shootIt);
@@ -484,10 +486,10 @@ const SpaceShooter = () =>
                                 }
                                 else
                                 {
-                                    if(movimiento[1]!=0)
+                                    if(movimiento[1]!==0)
                                     {
-                                        if( aux[Number(bulletAt[0])][Number(bulletAt[1]) + ( ( c - 1 ) * Number(movimiento[1]) )]=='' ||
-                                            aux[Number(bulletAt[0])][Number(bulletAt[1]) + ( ( c - 1 ) * Number(movimiento[1]) )]=='💥')
+                                        if( aux[Number(bulletAt[0])][Number(bulletAt[1]) + ( ( c - 1 ) * Number(movimiento[1]) )]==='' ||
+                                            aux[Number(bulletAt[0])][Number(bulletAt[1]) + ( ( c - 1 ) * Number(movimiento[1]) )]==='💥')
                                         {
                                             c++;
                                             clearInterval(shootIt);
@@ -504,13 +506,13 @@ const SpaceShooter = () =>
                             }
                             else
                             {
-                                if( objective==asteroid || (objective==ship_right || objective==ship_left || objective==ship_up || objective==ship_down)
-                                || (objective==laser_down || objective==laser_up || objective==laser_left || objective==laser_right) )
+                                if( objective===asteroid || (objective===ship_right || objective===ship_left || objective===ship_up || objective===ship_down)
+                                || (objective===laser_down || objective===laser_up || objective===laser_left || objective===laser_right) )
                                 {
-                                    if(movimiento[0]!=0)
+                                    if(movimiento[0]!==0)
                                     {
-                                        if( aux[Number(bulletAt[0]) + ( ( c - 1 ) * Number(movimiento[0]) ) ][Number(bulletAt[1])]=='' ||
-                                            aux[Number(bulletAt[0]) + ( ( c - 1 ) * Number(movimiento[0]) ) ][Number(bulletAt[1])]=='💥' )
+                                        if( aux[Number(bulletAt[0]) + ( ( c - 1 ) * Number(movimiento[0]) ) ][Number(bulletAt[1])]==='' ||
+                                            aux[Number(bulletAt[0]) + ( ( c - 1 ) * Number(movimiento[0]) ) ][Number(bulletAt[1])]==='💥' )
                                         {
                                             c++;
                                             clearInterval(shootIt);
@@ -518,7 +520,7 @@ const SpaceShooter = () =>
                                         else
                                         {
                                             aux[Number(bulletAt[0]) + ( ( c - 1 ) * Number(movimiento[0]) ) ][Number(bulletAt[1])]='';
-                                            if( !aShoot && (objective==ship_right || objective==ship_left || objective==ship_up || objective==ship_down) )
+                                            if( !aShoot && (objective===ship_right || objective===ship_left || objective===ship_up || objective===ship_down) )
                                             {
                                                 setDead( prevDead =>
                                                 {
@@ -547,7 +549,7 @@ const SpaceShooter = () =>
                                             }
                                             else
                                             {
-                                                if(!aShoot && objective==asteroid)
+                                                if(!aShoot && objective===asteroid)
                                                 {
                                                     aux[Number(bulletAt[0]) + ( c * Number(movimiento[0]) ) ][Number(bulletAt[1])] = "💥";
                                                     boomAnimation( bulletAt[0], c, movimiento[0] ,bulletAt[1], 1 );
@@ -556,7 +558,7 @@ const SpaceShooter = () =>
                                                     clearInterval(shootIt);
                                                 }
                                             }
-                                            if(aShoot && objective==asteroid || (!aShoot && (objective==laser_down || objective==laser_up || objective==laser_left || objective==laser_right)) )
+                                            if(aShoot && objective===asteroid || (!aShoot && (objective===laser_down || objective===laser_up || objective===laser_left || objective===laser_right)) )
                                             {
                                                 aux[Number(bulletAt[0]) + ( c * Number(movimiento[0]) ) ][Number(bulletAt[1])] = "💥";
                                                 setScore( prevScore => prevScore + 10 );
@@ -569,10 +571,10 @@ const SpaceShooter = () =>
                                     }
                                     else
                                     {
-                                        if(movimiento[1]!=0)
+                                        if(movimiento[1]!==0)
                                         {
-                                            if( aux[Number(bulletAt[0])][Number(bulletAt[1]) + ( ( c - 1 ) * Number(movimiento[1]) )]=='' ||
-                                                aux[Number(bulletAt[0])][Number(bulletAt[1]) + ( ( c - 1 ) * Number(movimiento[1]) )]=='💥')
+                                            if( aux[Number(bulletAt[0])][Number(bulletAt[1]) + ( ( c - 1 ) * Number(movimiento[1]) )]==='' ||
+                                                aux[Number(bulletAt[0])][Number(bulletAt[1]) + ( ( c - 1 ) * Number(movimiento[1]) )]==='💥')
                                             {
                                                 c++;
                                                 clearInterval(shootIt);
@@ -580,7 +582,7 @@ const SpaceShooter = () =>
                                             else
                                             {
                                                 aux[Number(bulletAt[0])][Number(bulletAt[1]) + ( ( c - 1 ) * Number(movimiento[1]) )] = '';
-                                                if( !aShoot && (objective==ship_right || objective==ship_left || objective==ship_up || objective==ship_down) )
+                                                if( !aShoot && (objective===ship_right || objective===ship_left || objective===ship_up || objective===ship_down) )
                                                 {
                                                     setDead( prevDead =>
                                                     {
@@ -609,7 +611,7 @@ const SpaceShooter = () =>
                                                 }
                                                 else
                                                 {
-                                                    if(!aShoot && objective==asteroid)
+                                                    if(!aShoot && objective===asteroid)
                                                     {
                                                         aux[Number(bulletAt[0])][Number(bulletAt[1]) + ( c * Number(movimiento[1]) ) ] = "💥";
                                                         boomAnimation( bulletAt[0], c, movimiento[1] ,bulletAt[1], 2 );
@@ -618,7 +620,7 @@ const SpaceShooter = () =>
                                                         clearInterval(shootIt);
                                                     }
                                                 }
-                                                if(aShoot && objective==asteroid || (!aShoot && (objective==laser_down || objective==laser_up || objective==laser_left || objective==laser_right)) )
+                                                if(aShoot && objective===asteroid || (!aShoot && (objective===laser_down || objective===laser_up || objective===laser_left || objective===laser_right)) )
                                                 {
                                                     aux[Number(bulletAt[0])][Number(bulletAt[1]) + ( c * Number(movimiento[1]) ) ] = "💥";
                                                     setScore( prevScore => prevScore  + 10 );
@@ -636,7 +638,7 @@ const SpaceShooter = () =>
                         else
                         {
                             let aux = [...mapa];
-                            if(movimiento[0]!=0)
+                            if(movimiento[0]!==0)
                             {
                                 aux[Number(bulletAt[0]) + ( ( c - 1 ) * Number(movimiento[0]) ) ][Number(bulletAt[1])]='';
                                 c++;
@@ -645,7 +647,7 @@ const SpaceShooter = () =>
                             }
                             else
                             {
-                                if(movimiento[1]!=0)
+                                if(movimiento[1]!==0)
                                 {
                                     aux[Number(bulletAt[0])][Number(bulletAt[1]) + ( (c - 1) * Number(movimiento[1]) )]='';
                                     c++;
@@ -655,8 +657,8 @@ const SpaceShooter = () =>
                             }
                         }
                     }
-                    c%2==0 && setClick(false);
-                    c%2!=0 && setClick(true);
+                    c%2===0 && setClick(false);
+                    c%2!==0 && setClick(true);
                 }, aShoot ? 50 : timer );
             }
     }
@@ -694,18 +696,18 @@ const SpaceShooter = () =>
         let aux = [ ...mapa ];
         setTimeout( () =>
         {
-            if(interaction == 1)
+            if(interaction === 1)
             {
                 let objective = aux[Number(bulletAt0) + ( c * Number(movimiento) ) ][Number(bulletAt1)];
-                if( !(objective==ship_right || objective==ship_left || objective==ship_up || objective==ship_down) )
+                if( !(objective===ship_right || objective===ship_left || objective===ship_up || objective===ship_down) )
                 {
                     aux[Number(bulletAt0) + ( c * Number(movimiento) ) ][Number(bulletAt1)] = '';
                 }
             }
-            if(interaction == 2)
+            if(interaction === 2)
             {
                 let objective = aux[Number(bulletAt0)][Number(bulletAt1) + ( c * Number(movimiento) ) ];
-                if( !(objective==ship_right || objective==ship_left || objective==ship_up || objective==ship_down) )
+                if( !(objective===ship_right || objective===ship_left || objective===ship_up || objective===ship_down) )
                 {
                     aux[Number(bulletAt0)][Number(bulletAt1) + ( c * Number(movimiento) ) ] = '';
                 }
@@ -730,7 +732,7 @@ const SpaceShooter = () =>
         {
             setTimeLeft( prevTime => prevTime - 1 );
             contador++
-            if(contador==3)
+            if(contador===3)
             {
                 setTimeLeft( 3 );
                 setGo( true );
@@ -754,7 +756,7 @@ const SpaceShooter = () =>
             setShowEnd(false);
         }, 3000)
 
-        aux.map( (fila, x) => fila.map( (celda, y) => {if(celda==ship_right || celda==ship_left || celda==ship_up || celda==ship_down)
+        aux.map( (fila, x) => fila.map( (celda, y) => {if(celda===ship_right || celda===ship_left || celda===ship_up || celda===ship_down)
         {
             aux[x][y]='';
         }} ));
@@ -770,9 +772,9 @@ const SpaceShooter = () =>
             </div>
 
             <div className='general'>
-                {startId==0 && <img src={logo} className='logo'/>}
-                {startId!=0 &&
-                <div className='columna' onKeyDown={handleMovement} onKeyPress={shoot} tabIndex={0}>
+                {startId===0 && <img src={logo} className='logo'/>}
+                {startId!==0 &&
+                <div className='columna' ref={gridRef} onKeyDown={handleMovement} onKeyPress={shoot} tabIndex={0}>
 
                     {mapa.map( ( fila, x ) =>
                     <div key={x} className='fila'>
@@ -780,13 +782,13 @@ const SpaceShooter = () =>
                         {
                             let x = false;
                             let estilo = 'celda';
-                            if(celda==ship_down || celda==ship_left || celda==ship_right || celda==ship_up || celda==asteroid ||
-                                celda==laser_down || celda==laser_left || celda==laser_right || celda==laser_up )
+                            if(celda===ship_down || celda===ship_left || celda===ship_right || celda===ship_up || celda===asteroid ||
+                                celda===laser_down || celda===laser_left || celda===laser_right || celda===laser_up )
                             {
                                 x = true;
                             }
 
-                            if(dead && x && celda!=asteroid)
+                            if(dead && x && celda!==asteroid)
                             {
                                 estilo = 'titilar';
                             }
@@ -804,7 +806,7 @@ const SpaceShooter = () =>
 
                 </div>}
 
-                {startId==0 &&
+                {startId===0 &&
                 <div className='columna' tabIndex={0}>
 
                     {mapa.map( ( fila, x ) =>
@@ -812,8 +814,8 @@ const SpaceShooter = () =>
                         {fila.map( ( celda, y ) =>
                         {
                             let x = false;
-                            if(celda==ship_down || celda==ship_left || celda==ship_right || celda==ship_up || celda==asteroid ||
-                                celda==laser_down || celda==laser_left || celda==laser_right || celda==laser_up )
+                            if(celda===ship_down || celda===ship_left || celda===ship_right || celda===ship_up || celda===asteroid ||
+                                celda===laser_down || celda===laser_left || celda===laser_right || celda===laser_up )
                             {
                                 x = true;
                             }
@@ -832,8 +834,8 @@ const SpaceShooter = () =>
                 </div>}     
             </div>
 
-            {startId==0 && <button onClick={startGame}> START </button>}
-            {startId!=0 && <button onClick={stopGame}> STOP </button>}
+            {startId===0 && <button onClick={startGame}> START </button>}
+            {startId!==0 && <button onClick={stopGame}> STOP </button>}
 
             {showStart &&
             <div className='message'>
